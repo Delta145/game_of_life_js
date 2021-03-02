@@ -36,34 +36,70 @@ export const getNeighborCount = (cellRow, cellCol) => {
     const isNotLastCol = (col) => col + 1 < cols
     const isNotLastRow = (row) => row + 1 < rows
 
+    const isNotUpperLeftCorner = (nRow, nCol) => {
+        if (isNotFirstRow(nRow) && isNotFirstCol(nCol)) {
+            return (currGen[nRow - 1][nCol - 1] === 1);
+        }
+    }
+
+    const isNotUpperRightCorner = (nRow, nCol) => {
+        if (isNotFirstRow(nRow) && isNotLastCol(nCol)) {
+            return (currGen[nRow - 1][nCol + 1] === 1)
+        }
+    }
+
+    const isLeftNeighbor = (nRow, nCol) => {
+        if (isNotFirstCol(nCol)) {
+            return (currGen[nRow][nCol - 1] === 1);
+        }
+    }
+
+    const isRightNeighbor = (nRow, nCol) => {
+        if (isNotLastCol(nCol)) {
+            return (currGen[nRow][nCol + 1] === 1)
+        }
+    }
+
+    const isBottomLeftNeighbor = (nRow, nCol) => {
+        if (isNotLastRow(nRow) && isNotFirstCol(nCol)) {
+            return (currGen[nRow + 1][nCol - 1] === 1)
+        }
+    }
+
+    const isBottomRightNeighbor = (nRow, nCol) => {
+        if (isNotLastRow(nRow) && isNotLastCol(nCol)) {
+            return (currGen[nRow + 1][nCol + 1] === 1)
+        }
+    }
+
+
     if (isNotFirstRow(nRow)) {
         if (currGen[nRow - 1][nCol] === 1)
             count++;
     }
-    if (isNotFirstRow(nRow) && isNotFirstCol(nCol)) {
-        if (currGen[nRow - 1][nCol - 1] === 1)
-            count++;
-    }
-    if (isNotFirstRow(nRow) && isNotLastCol(nCol)) {
-        if (currGen[nRow - 1][nCol + 1] === 1)
-            count++;
-    }
-    if (isNotFirstCol(nCol)) {
-        if (currGen[nRow][nCol - 1] === 1)
-            count++;
-    }
-    if (isNotLastCol(nCol)) {
-        if (currGen[nRow][nCol + 1] === 1)
-            count++;
-    }
-    if (isNotLastRow(nRow) && isNotFirstCol(nCol)) {
-        if (currGen[nRow + 1][nCol - 1] === 1)
-            count++;
+
+    if (isNotUpperLeftCorner(nRow, nCol)) {
+        count++;
     }
 
-    if (isNotLastRow(nRow) && isNotLastCol(nCol)) {
-        if (currGen[nRow + 1][nCol + 1] === 1)
-            count++;
+    if (isNotUpperRightCorner(nRow, nCol)) {
+        count++;
+    }
+
+    if (isLeftNeighbor(nRow, nCol)) {
+        count++;
+    }
+
+    if (isRightNeighbor(nRow, nCol)) {
+        count++;
+    }
+
+    if (isBottomLeftNeighbor(nRow, nCol)) {
+        count++;
+    }
+
+    if (isBottomRightNeighbor(nRow, nCol)) {
+        count++;
     }
 
     if (isNotLastRow(nRow)) {
@@ -73,6 +109,7 @@ export const getNeighborCount = (cellRow, cellCol) => {
 
     return count;
 }
+
 
 const startGame = (btn) => {
     started = true;
