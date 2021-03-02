@@ -1,5 +1,5 @@
-import {initWorld} from "./worldInit.js";
-import {commenceWorldCycle} from "./worldGeneration.js";
+import {initWorld} from "./WorldInit.js";
+import {commenceWorldCycle} from "./WorldGeneration.js";
 
 const STOP_REPRODUCING_LABEL = 'Stop Reproducing';
 const START_REPRODUCING_LABEL = 'Start Reproducing';
@@ -40,38 +40,28 @@ export const getNeighborCount = (cellRow, cellCol) => {
         if (currGen[nRow - 1][nCol] === 1)
             count++;
     }
-
-    // check if not upper left corner
     if (isNotFirstRow(nRow) && isNotFirstCol(nCol)) {
         if (currGen[nRow - 1][nCol - 1] === 1)
             count++;
     }
-    // check if not upper right corner
     if (isNotFirstRow(nRow) && isNotLastCol(nCol)) {
         if (currGen[nRow - 1][nCol + 1] === 1)
             count++;
     }
-    // Make sure we are not on the first column
     if (isNotFirstCol(nCol)) {
-        //Check left neighbor
         if (currGen[nRow][nCol - 1] === 1)
             count++;
     }
-    // Make sure we are not on the last column
     if (isNotLastCol(nCol)) {
-        //Check right neighbor
         if (currGen[nRow][nCol + 1] === 1)
             count++;
     }
-    // Make sure we are not on the bottom left corner
     if (isNotLastRow(nRow) && isNotFirstCol(nCol)) {
-        //Check bottom left neighbor
         if (currGen[nRow + 1][nCol - 1] === 1)
             count++;
     }
 
     if (isNotLastRow(nRow) && isNotLastCol(nCol)) {
-        //Check bottom right neighbor
         if (currGen[nRow + 1][nCol + 1] === 1)
             count++;
     }

@@ -1,4 +1,4 @@
-import {currGen, getNeighborCount, nextGen} from "./main.js";
+import {currGen, getNeighborCount, nextGen} from "./Main.js";
 
 const createNextGen = () => {
     for (const row in currGen) {
@@ -44,8 +44,8 @@ const updateWorld = () => {
 }
 
 export const commenceWorldCycle = () => {
-    createNextGen(); // Apply the game rules
-    updateCurrGen(); // Set Current values from new generation
-    updateWorld(); // Update the view
+    createNextGen();
+    updateCurrGen();
+    updateWorld();
 }
 

@@ -1,4 +1,4 @@
-import {cellClick, cols, currGen, nextGen, rows} from "./main.js";
+import {cellClick, cols, currGen, nextGen, rows} from "./Main.js";
 
 const createWorldCells = (tbl) => {
    for (let i = 0; i < rows; i++) {
