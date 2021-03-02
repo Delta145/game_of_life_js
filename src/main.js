@@ -1,13 +1,19 @@
-const rows = 30;
-const cols = 30;
-const currGen = [rows];
-const nextGen = [rows];
+import {initWorld} from "./worldInit.js";
+import {commenceWorldCycle} from "./worldGeneration.js";
+
+const STOP_REPRODUCING_LABEL = 'Stop Reproducing';
+const START_REPRODUCING_LABEL = 'Start Reproducing';
+
+export const rows = 30;
+export const cols = 30;
+export const currGen = [rows];
+export const nextGen = [rows];
 
 let started = false;
 let timer;
 const EVOLUTION_SPEED = 1000;
 
-function cellClick() {
+export function cellClick() {
     let loc = this.id.split("_");
     let row = Number(loc[0]);
     let col = Number(loc[1]);
@@ -20,7 +26,7 @@ function cellClick() {
     }
 }
 
-const getNeighborCount = (cellRow, cellCol) => {
+export const getNeighborCount = (cellRow, cellCol) => {
     let count = 0;
     let nRow = Number(cellRow);
     let nCol = Number(cellCol);
@@ -78,63 +84,17 @@ const getNeighborCount = (cellRow, cellCol) => {
     return count;
 }
 
-const createNextGen = () => {
-    for (const row in currGen) {
-        for (const col in currGen[row]) {
-            const neighbors = getNeighborCount(row, col);
-            if (currGen[row][col] === 1) {
-                if (neighbors < 2) {
-                    nextGen[row][col] = 0;
-                } else if (neighbors === 2 || neighbors === 3) {
-                    nextGen[row][col] = 1;
-                } else if (neighbors > 3) {
-                    nextGen[row][col] = 0;
-                }
-            } else if (currGen[row][col] === 0) {
-                if (neighbors === 3) {
-                    nextGen[row][col] = 1;
-                }
-            }
-        }
-    }
-}
-
-const updateCurrGen = () => {
-    for (const row in currGen) {
-        for (const col in currGen[row]) {
-            currGen[row][col] = nextGen[row][col];
-            // Set nextGen back to empty
-            nextGen[row][col] = 0;
-        }
-    }
-
-}
-
-const updateWorld = () => {
-    for (const row in currGen) {
-        for (const col in currGen[row]) {
-            const cell = document.getElementById(row + '_' + col);
-            if (currGen[row][col] === 0) {
-                cell.setAttribute('class', 'dead');
-            } else {
-                cell.setAttribute('class', 'alive');
-            }
-        }
-    }
-}
-
 const startGame = (btn) => {
     started = true;
-    btn.value = 'Stop Reproducing';
+    btn.value = STOP_REPRODUCING_LABEL;
     evolve();
 }
 
 const stopGame = (btn) => {
     started = false;
-    btn.value = 'Start Reproducing';
+    btn.value = START_REPRODUCING_LABEL;
     clearTimeout(timer);
 }
-
 
 const startOrStopGame = () => {
     const startStopBtn = document.querySelector('#btn-start-stop');
@@ -146,9 +106,7 @@ const startOrStopGame = () => {
 }
 
 const evolve = () => {
-    createNextGen(); // Apply the game rules
-    updateCurrGen(); // Set Current values from new generation
-    updateWorld(); // Update the view
+    commenceWorldCycle();
     if (started) {
         timer = setTimeout(evolve, EVOLUTION_SPEED);
     }
@@ -158,54 +116,16 @@ const resetWorld = () => {
     location.reload();
 }
 
-// initWorld Module start
-
-const createWorldCells = (tbl) => {
-    for (let i = 0; i < rows; i++) {
-        const tr = document.createElement('tr');
-        for (let j = 0; j < cols; j++) {
-            const cell = document.createElement('td');
-            cell.setAttribute('id', i + '_' + j);
-            cell.setAttribute('class', 'dead');
-            cell.addEventListener('click', cellClick);
-            tr.appendChild(cell);
-        }
-        tbl.appendChild(tr);
-    }
+const applyListeners = () => {
+    const btnStartStop = document.querySelector('#btn-start-stop');
+    btnStartStop.addEventListener('click', startOrStopGame)
+    const btnEvolve = document.querySelector('#btn-evolve');
+    btnEvolve.addEventListener('click', evolve);
+    const btnReset = document.querySelector('#btn-reset');
+    btnReset.addEventListener('click', resetWorld);
 }
-
-const createWorld = () => {
-    const world = document.querySelector('#world');
-    const tbl = document.createElement('table');
-    tbl.setAttribute('id', 'world-grid');
-    createWorldCells(tbl);
-    world.appendChild(tbl);
-}
-
-const createGenerationArrays = () => {
-    for (let i = 0; i < rows; i++) {
-        currGen[i] = new Array(cols);
-        nextGen[i] = new Array(cols);
-    }
-}
-
-const initGenArrays = () => {
-    for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < cols; j++) {
-            currGen[i][j] = 0;
-            nextGen[i][j] = 0;
-        }
-    }
-}
-
-const initWorld = () => {
-    createWorld();
-    createGenerationArrays();
-    initGenArrays();
-}
-
-// initWorld Module end
 
 window.onload = () => {
+    applyListeners();
     initWorld();
 }
